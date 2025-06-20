@@ -5,7 +5,7 @@ import AppFooter from '@/components/layout/AppFooter';
 import AuthFormCard from '@/components/AuthFormCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label'; // Though shadcn Form usually uses FormLabel
+// import { Label } from '@/components/ui/label'; // Not used due to FormLabel
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from 'react-hook-form';
@@ -21,7 +21,7 @@ type PasswordRecoveryFormValues = z.infer<typeof passwordRecoverySchema>;
 
 const PasswordRecoveryPage = () => {
   console.log('PasswordRecoveryPage loaded');
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Not used in current logic, but good to have if needed
   const [formMessage, setFormMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const form = useForm<PasswordRecoveryFormValues>({
@@ -34,24 +34,19 @@ const PasswordRecoveryPage = () => {
   const onSubmit = async (data: PasswordRecoveryFormValues) => {
     setFormMessage(null);
     console.log('Password recovery requested for:', data.email);
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Simulate success
     setFormMessage({ type: 'success', text: "If an account exists for this email, password recovery instructions have been sent." });
-    form.reset(); // Optionally reset form on success
-
-    // Simulate error (e.g., email not found - though typically you wouldn't reveal this for security)
-    // setFormMessage({ type: 'error', text: "Could not process request. Please try again." });
+    form.reset(); 
   };
 
   const authFormFooterLinks = [
-    { text: "Remember your password? Sign In", to: "/" }, // Path from App.tsx
-    { text: "Don't have an account? Sign Up", to: "/registration" } // Path from App.tsx
+    { text: "Remember your password? Sign In", to: "/" }, 
+    { text: "Don't have an account? Sign Up", to: "/registration" } 
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex flex-col min-h-screen bg-background text-foreground"> {/* Use theme-aware bg/text */}
       <AppHeader />
       <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <AuthFormCard
@@ -69,7 +64,7 @@ const PasswordRecoveryPage = () => {
                   <FormItem>
                     <FormLabel htmlFor="email">Email Address</FormLabel>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" /> {/* Use theme-aware icon color */}
                       <FormControl>
                         <Input
                           id="email"
@@ -86,7 +81,12 @@ const PasswordRecoveryPage = () => {
               />
 
               {formMessage && (
-                <Alert variant={formMessage.type === 'error' ? 'destructive' : 'default'} className={formMessage.type === 'success' ? 'bg-green-50 border-green-300 dark:bg-green-900 dark:border-green-700' : ''}>
+                // The success alert variant might need adjustment if 'default' isn't green enough
+                // For now, assuming 'default' for success is acceptable, or use specific classes for success as before
+                <Alert 
+                  variant={formMessage.type === 'error' ? 'destructive' : 'default'} 
+                  className={`${formMessage.type === 'success' ? 'border-green-500 text-green-700 dark:border-green-600 dark:text-green-400 dark:bg-green-900/30 bg-green-500/10' : ''}`}
+                >
                   {formMessage.type === 'success' ? <CheckCircle2 className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
                   <AlertTitle>{formMessage.type === 'success' ? 'Instructions Sent' : 'Error'}</AlertTitle>
                   <AlertDescription>
