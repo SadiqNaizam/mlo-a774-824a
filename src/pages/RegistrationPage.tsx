@@ -20,7 +20,6 @@ import * as z from "zod";
 // Icons
 import { AlertTriangle, CheckCircle2 } from 'lucide-react';
 
-// Define the validation schema for the registration form
 const registrationFormSchema = z.object({
   fullName: z.string().min(2, { message: "Full name must be at least 2 characters." }).max(50, { message: "Full name must not exceed 50 characters."}),
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -28,12 +27,11 @@ const registrationFormSchema = z.object({
   confirmPassword: z.string().min(8, { message: "Password confirmation is required." })
 }).refine(data => data.password === data.confirmPassword, {
   message: "Passwords do not match.",
-  path: ["confirmPassword"], // Apply error to the confirmPassword field
+  path: ["confirmPassword"], 
 });
 
 type RegistrationFormValues = z.infer<typeof registrationFormSchema>;
 
-// Interface for page-level alerts
 interface PageAlert {
   type: 'success' | 'error';
   message: string;
@@ -55,40 +53,33 @@ const RegistrationPage: React.FC = () => {
   });
 
   const onSubmit = async (data: RegistrationFormValues) => {
-    setPageAlert(null); // Clear previous page-level alerts
+    setPageAlert(null); 
     console.log('Registration form submitted:', data);
-
-    // Simulate an API call for registration
     await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Placeholder: Simulate success or failure
-    const isSuccess = Math.random() > 0.3; // Higher chance of success for demo
+    const isSuccess = Math.random() > 0.3; 
 
     if (isSuccess) {
       setPageAlert({ type: 'success', message: 'Registration successful! Redirecting to login...' });
-      form.reset(); // Reset form on success
+      form.reset(); 
       setTimeout(() => {
-        navigate('/'); // Navigate to LoginPage (path "/" from App.tsx)
+        navigate('/'); 
       }, 2000);
     } else {
-      // Example: Server-side error not caught by field validation
       setPageAlert({ type: 'error', message: 'Registration failed. An unexpected error occurred. Please try again.' });
-      // Optionally, you might get specific error messages from backend to set for specific fields
-      // form.setError('root.serverError', { type: 'manual', message: '...' })
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex flex-col min-h-screen bg-background text-foreground"> {/* Use theme-aware bg/text */}
       <AppHeader />
       <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <AuthFormCard
           title="Create Your Account"
           description="Fill in the details below to register a new account."
           footerLinks={[
-            { text: "Already have an account? Log In", to: "/" } // Link to LoginPage from App.tsx
+            { text: "Already have an account? Log In", to: "/" } 
           ]}
-          className="w-full max-w-lg" // Adjusted width for a registration form
+          className="w-full max-w-lg"
         >
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -146,7 +137,12 @@ const RegistrationPage: React.FC = () => {
               />
 
               {pageAlert && (
-                <Alert variant={pageAlert.type === 'error' ? 'destructive' : 'default'} className="mt-4">
+                // For Alert component, ensure its variants handle dark mode (ShadCN usually does)
+                // 'default' variant in ShadCN Alert is typically theme-aware.
+                // 'destructive' variant is also theme-aware.
+                // Custom success styling might need explicit dark mode handling if not using a 'success' variant from ShadCN.
+                // The Alert component in this project uses `variant="default"` or `variant="destructive"` which should be fine.
+                <Alert variant={pageAlert.type === 'error' ? 'destructive' : 'default'} className={`mt-4 ${pageAlert.type === 'success' ? 'border-green-500 text-green-700 dark:border-green-600 dark:text-green-400' : ''}`}>
                   {pageAlert.type === 'error' ? <AlertTriangle className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4" />}
                   <AlertTitle>{pageAlert.type === 'success' ? 'Success!' : 'Registration Error'}</AlertTitle>
                   <AlertDescription>
