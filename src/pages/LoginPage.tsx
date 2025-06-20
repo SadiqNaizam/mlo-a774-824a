@@ -52,28 +52,22 @@ const LoginPage: React.FC = () => {
     console.log("Login attempt with:", values);
 
     // Simulate API call for login
-    // In a real application, you would call your backend API here
-    // For demonstration, we'll use mock credentials
     if (values.email === "user@example.com" && values.password === "password123") {
-      // Simulate successful login
       console.log("Login successful, navigating to dashboard...");
-      // Potentially use a toast notification for success feedback
-      // toast({ title: "Login Successful", description: "Redirecting to dashboard..." });
-      navigate("/dashboard"); // Navigate to dashboard as per App.tsx
+      navigate("/dashboard"); 
     } else {
-      // Simulate failed login
       console.log("Login failed: Invalid credentials");
       setLoginError("Invalid email or password. Please try again.");
     }
   };
 
   const authFormFooterLinks = [
-    { text: "Forgot Password?", to: "/password-recovery" }, // Path from App.tsx
-    { text: "Don't have an account? Sign Up", to: "/registration", type: 'primary' as 'primary' | 'secondary' }, // Path from App.tsx
+    { text: "Forgot Password?", to: "/password-recovery" }, 
+    { text: "Don't have an account? Sign Up", to: "/registration", type: 'primary' as 'primary' | 'secondary' },
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex flex-col min-h-screen bg-background text-foreground"> {/* Use theme-aware bg/text */}
       <AppHeader />
       <main className="flex-grow flex items-center justify-center p-4 sm:p-6 lg:p-8">
         <AuthFormCard
@@ -97,7 +91,7 @@ const LoginPage: React.FC = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center">
-                      <Mail className="mr-2 h-4 w-4 text-gray-500 dark:text-gray-400" />
+                      <Mail className="mr-2 h-4 w-4 text-muted-foreground" /> {/* Use theme-aware icon color */}
                       Email Address
                     </FormLabel>
                     <FormControl>
@@ -105,7 +99,7 @@ const LoginPage: React.FC = () => {
                         type="email"
                         placeholder="you@example.com"
                         {...field}
-                        className="dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                        // className="dark:bg-gray-700 dark:text-white dark:border-gray-600" // Remove explicit dark styles, rely on component's theme awareness
                       />
                     </FormControl>
                     <FormMessage />
@@ -118,7 +112,7 @@ const LoginPage: React.FC = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center">
-                      <Lock className="mr-2 h-4 w-4 text-gray-500 dark:text-gray-400" />
+                      <Lock className="mr-2 h-4 w-4 text-muted-foreground" /> {/* Use theme-aware icon color */}
                       Password
                     </FormLabel>
                     <FormControl>
@@ -126,7 +120,7 @@ const LoginPage: React.FC = () => {
                         type="password"
                         placeholder="••••••••"
                         {...field}
-                        className="dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                        // className="dark:bg-gray-700 dark:text-white dark:border-gray-600" // Remove explicit dark styles
                       />
                     </FormControl>
                     <FormMessage />
@@ -142,18 +136,18 @@ const LoginPage: React.FC = () => {
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
-                        className="dark:border-gray-600"
+                        // className="dark:border-gray-600" // Remove explicit dark styles
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                      <FormLabel className="text-sm font-normal text-gray-700 dark:text-gray-300">
+                      <FormLabel className="text-sm font-normal text-foreground"> {/* Use theme-aware text */}
                         Remember me
                       </FormLabel>
                     </div>
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+              <Button type="submit" className="w-full"> {/* Remove explicit bg colors, rely on primary variant */}
                 Login
               </Button>
             </form>
